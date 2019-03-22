@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+	<head><link rel='icon' href='favicon.ico' type='image/x-icon'/></head>
+	<header>
+		<title>Calculator - Carbon Calc</title>
+		<link rel="stylesheet" href="style.css">
+		<link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
+	</header>
+	<body>
+		<div class="header">
+			<a href="index.html"><img src="images/logo_header.png" height="45px"></a>
+		</div>
+		<script> /*CALC*/
+			/*inital*/
+			var qNum = 1;
+			var qTitle = "";
+			var totalVal = 0;
+			var userVal = 0;
+			var badText = false;
+			var milesPerWeek = 0;
+			
+			/*edit html*/
+			function edit() {
+				if (document.getElementById("qValue").value >= 0 && document.getElementById("qValue").value <= 99999 && document.getElementById("qValue").value != "") {
+					badText = false;
+					userVal = document.getElementById("qValue").value /*num the user entered*/
+					
+					/*equations for each question, then set next question*/
+					if (qNum == 1) {
+						totalVal += parseFloat(userVal) * 12 * 2;
+						qTitle = "How much electricity do you use per month in kilowatt-hours? If your bill is ~$100 then you probably use ~700kWh.";
+					} else if (qNum == 2) {
+						totalVal += parseFloat(userVal) * 12 * 1.4;
+						qTitle = "How many therms of natural gas do you use per month? Average is ~30. <p>If you do not use this, type 0.</p>";
+					} else if (qNum == 3) {
+						totalVal += parseFloat(userVal) * 12 * 11.7;
+						qTitle = "How much is your water bill per month? Average is ~$75. <p>If you do not receive a water bill, type 75.</p>";
+					} else if (qNum == 4) {
+						totalVal += parseFloat(userVal) * 12 * 8.9;
+						qTitle = "What is the square footage of your house/dwelling? A small house is about 1500sqft. The average is 2400sqft for a house and 900sqft for an apartment.";
+					} else if (qNum == 5) {
+						totalVal += parseFloat(userVal) * 2.1;
+						document.getElementById("qHeading").innerHTML = "Impact of Transportation";
+						qTitle = "How many miles per week do you drive? <p class=\"lowhelper\">If you do not drive, type 0.</p>";
+					} else if (qNum == 6) {
+						milesPerWeek = parseFloat(userVal);
+						qTitle = "How many miles per gallon does your car have?<p>If you do not drive, type 0.</p>";
+					} else if (qNum == 7) {
+						if (parseFloat(userVal) != 0) {
+							totalVal += parseFloat(userVal) / milesPerWeek * 52;
+						}
+						qTitle = "How many miles do you ride on public transportation a week (bus and/or train)? <p>If you do not use public transport, type 0</p>";
+					} else if (qNum == 8) {
+						totalVal += parseFloat(userVal) * 52 * 0.5;
+						document.getElementById("qHeading").innerHTML = "Impact of Food Products";
+						qTitle = "How much money do you spend on fast food and/or eating out in a month?";
+					} else if (qNum == 9) {
+						totalVal += parseFloat(userVal) * 12 * 0.8;
+						qTitle = "How much money do you spend on meat, fish, and protein in a month?";
+					} else if (qNum == 10) {
+						totalVal += parseFloat(userVal) * 12 * 3.2;
+						qTitle = "How much money do you spend on cereal and grain in a month?";
+					} else if (qNum == 11) {
+						totalVal += parseFloat(userVal) * 12 * 1.6;
+						qTitle = "How much money do you spend on dairy in a month?";
+					} else if (qNum == 12) {
+						totalVal += parseFloat(userVal) * 12 * 4.2;
+						qTitle = "How much money do you spend on fruits and vegetables in a month?";
+					} else if (qNum == 13) {
+						totalVal += parseFloat(userVal) * 12 * 2.6;
+						qTitle = "How much money do you spend on other food types (like snacks) in a month?";
+					} else if (qNum == 14) {
+						totalVal += parseFloat(userVal) * 12;
+						document.getElementById("qHeading").innerHTML = "Impact of Personal Products";
+						qTitle = "How much money do you spend on clothes for yourself in a year?";
+					} else if (qNum == 15) {
+						totalVal += parseFloat(userVal);
+						qTitle = "How much money do you spend on household items (cleaning supplies, paper towers, etc.) in a month?";
+					}
+					
+					/*change question title and clear input*/
+					if (qNum != 16) {
+						qNum += 1;
+						document.getElementById("qTitle").innerHTML = "<b>" + qNum + "/16. </b>" + qTitle;
+						document.getElementById("calcForm").reset();
+					} else {
+						if (totalVal > 35000) {
+							document.getElementById("qTitle").innerHTML = "Your total average carbon emissions is <b>" + parseInt(totalVal) + " lbs/year</b>. <p>Unfortunately, this is greater than the national average of 35,000 lbs/yr. Check out the home page to find ways to reduce your carbon footprint!</p><p></p><a class=\"button\" href=\"index.html\">Go back home</a>";
+						} else {
+							document.getElementById("qTitle").innerHTML = "Your total average carbon emissions is <b>" + parseInt(totalVal) + " lbs/year</b>. <p>This is less than than the national average of 35,000 lbs/yr, so it seems like you're living a sustainable lifestyle! Check out the home page to find even more ways to reduce your carbon footprint!</p><p></p><a class=\"button\" href=\"index.html\">Go back home</a>";
+						}
+						document.getElementById("qHeading").innerHTML = "You're finished! Here are your results...";
+						return removeElement("submit", "qValue");
+						//return removeElement("qValue");
+						document.getElementById("qTitle").innerHTML = "<p><a href='index.html' class='button'>Go back home</a><p>";
+					}
+				} else if (badText == false) {
+					document.getElementById("qTitle").innerHTML += " <p class=\"error\">Your value must be from 0 to 99999.<p>";
+					badText = true;
+				}
+			}
+			
+			function removeElement(elementId, elementId2) {
+				var element = document.getElementById(elementId);
+				var element2 = document.getElementById(elementId2);
+				element.parentNode.removeChild(element);
+				element2.parentNode.removeChild(element2);
+			}
+		</script>
+		<style> /*STYLE*/
+			input.qValue {
+				width: 50%;
+				height: 40px;
+				align-content: center;
+			  	border: none;
+			  	border-bottom: 4px solid #236D7A;
+				-webkit-transition: 0.2s;
+			}
+			input.qValue:focus {
+				border-bottom: 4px solid #51C43F;
+			}
+			p.qHeading {
+				color: #FCF960;
+				font-size: 25px;
+				font-family: "Berlin Sans FB";
+			}
+			p.qTitle {
+				color: white;
+				font-size: 20px;
+				font-family: "Raleway";
+			}
+			input.submit {
+				color: white;
+				font-size: 20px;
+				border-style: solid;
+				border-width: 4px;
+				border-color: white;
+				width: 256px;;
+				padding: 10px;
+				padding-left: 20px; padding-right: 20px;
+				margin:0 auto;
+				background-color: rgba(0, 0, 0, 0.1);
+				transition: background-color 0.2s ease;
+				font-family: "Raleway";
+			}
+			input.submit:hover {
+				background-color: rgba(0, 0, 0, 0.3);
+				cursor: pointer;
+			}
+			div.calc {
+				margin-left: -8px;
+				margin-right: -8px;
+				padding-top: 20px;
+				padding-left: 10%;
+				padding-right: 10%;
+				font-family: "Raleway";
+				background: -webkit-linear-gradient(top, #226c77 0%,#53c13f 100%);
+				height: 400px;
+			}
+			p.error {
+				font-size: 16px;
+				color: #f8ff4f;
+			}
+			
+			p.help {
+				font-size: 18px;
+				color: white;
+			}
+		</style>
+		<div class="calc">
+			<form onsubmit="return false" id="calcForm">
+				<p class="qHeading" id="qHeading">Impacts at Home</p>
+  				<p class="qTitle" id="qTitle"><b>1/16.</b> On average, how many gallons of garbage do you put out a week? An average trash can holds 32 gallons.</p>
+			  	<input class="qValue" type="number" id="qValue" name="qValue">
+				<p></p>	
+				<input id="submit" class="submit" type="submit" value="Submit and continue..." onclick="return edit();">	
+			</form>
+		</div>
+	</body>
+</html>
